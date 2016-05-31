@@ -1,0 +1,145 @@
+li.current {
+     background: #855D8C;
+}
+form#add_salon{
+margin-left:-25px;
+background: #fff;
+}
+#add_salon .form-group{
+transition: all .2s;
+padding:5px 5px 20px 25px;
+}
+.form-group:hover {
+    background: #855d8c;
+    
+}
+#add_salon .form-active{
+    background: #855d8c;
+}
+.form-group:hover label{
+    color:#fff;
+    
+}
+.form-group:hover span{
+    color:#fff;      
+}
+#add_salon .mast_be{
+color:red;
+font-wieght:800;
+}
+#add_salon .form-group label{
+display: block;
+font-size: 18px;
+font-weight: 600;
+line-height: 20px;
+margin-bottom: 5px;
+}
+#add_salon .form-group input{
+outline: none;
+box-shadow: 0px 1px 0px 1px #cccccc inset;
+background-color: #f9f9f9;
+color: #885b64;
+padding: 5px 10px;
+box-shadow: 0px 1px 0px 1px #cccccc inset;
+border-radius: 3px;
+border: none;
+font-size: 20px;
+line-height: 30px;
+border-bottom: 1px solid #e6e5e5;
+}
+#add_salon .form-group:hover input{
+box-shadow: 0px 0px 0px 1px #E0DFDF inset;
+border: none;  
+background: #FDFDFD;
+}
+#add_salon .form-group input:focus{
+border-bottom: 2px solid rgba(3, 134, 253, 0.37);
+}
+#add_salon .form-group input:focuss{
+background-color: #FFF;
+border-bottom: 1px solid #e6e5e5;
+}
+
+#add_salon .form-group textarea{
+outline: none;
+box-shadow: 0px 1px 0px 1px #cccccc inset;
+background-color: #f9f9f9;
+color: #885b64;
+padding: 5px 10px;
+box-shadow: 0px 1px 0px 1px #cccccc inset;
+border-radius: 3px;
+border: none;
+font-size: 20px;
+line-height: 30px;
+border-bottom: 1px solid #e6e5e5;
+}
+#add_salon .form-group:hover textarea{
+box-shadow: 0px 0px 0px 1px #E0DFDF inset;
+border: none;        
+background: #FDFDFD;
+}
+#add_salon .form-group textarea:focus{
+border-bottom: 2px solid rgba(3, 134, 253, 0.37);
+}
+#add_salon .example{
+display: block;
+}
+#add_salon #page_heading{
+width:30%;
+}
+#add_salon #text_muted{
+width:100%;
+min-height:70px;
+}
+#add_salon #services{
+width:100%;
+}
+#add_salon #address{
+width:100%;
+}
+#add_salon #copon{
+
+}
+#add_salon #images{
+width:100%;
+}
+#add_salon #add_image{
+    background: #5b9dd9;
+    font-size: 18px;
+    color: #fff;
+    margin: 5px;
+    border-radius: 2px;
+    text-shadow: none;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    text-align: center;
+    border: 0;
+    box-shadow: 0 1px 1px rgba(000,000,000,0.25);
+}
+#add_salon #text{
+width:100%;
+min-height:200px;
+}
+#add_salon #map_code{
+width:50%;
+}
+#add_salon #submit{
+background: #e57c92;
+font-size: 24px;
+color: #fff;
+border-radius: 2px;
+text-shadow: none;
+text-transform: uppercase;
+padding: 7px 20px;
+text-align: center;
+border: 0;
+box-shadow: 0 1px 1px rgba(000,000,000,0.25);
+outline: none;
+width: 100%;
+max-width: 270px;
+outline: none;
+
+}
+input[type=number] {
+    height: 45px;
+}
