@@ -1,0 +1,1 @@
+<?php/** * do action to ger row */if(isset($_POST) && $_POST!= NULL) {	require realpath( __DIR__ ) . "/db_manager.php";	$t_name = "add_salon_page";	$r_ID = $_POST['editpost'];	$row = get_row($t_name,$r_ID);	//var_dump($row);	echo json_encode($row[0]);}

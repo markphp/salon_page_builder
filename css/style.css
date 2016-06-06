@@ -2,25 +2,36 @@ li.current {
      background: #855D8C;
 }
 form#add_salon{
-margin-left:-25px;
-background: #fff;
+
+}
+.main_container {
+    background-color: white;
+    padding: 0 20px 20px 20px;
+    margin-bottom: 20px;
+    border: 1px solid #CCC;
+    border-radius: 0 0 10px 10px;
+    background: rgb(255,255,255);
+    background: -moz-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(247,249,255,1) 48%, rgba(217,222,224,1) 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,1)), color-stop(48%,rgba(247,249,255,1)), color-stop(100%,rgba(217,222,224,1)));
+    background: -webkit-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(247,249,255,1) 48%,rgba(217,222,224,1) 100%);
+    background: -o-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(247,249,255,1) 48%,rgba(217,222,224,1) 100%);
+    background: -ms-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(247,249,255,1) 48%,rgba(217,222,224,1) 100%);
+    background: linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(247,249,255,1) 48%,rgba(217,222,224,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#d9dee0',GradientType=0 );
 }
 #add_salon .form-group{
 transition: all .2s;
 padding:5px 5px 20px 25px;
 }
-.form-group:hover {
-    background: #855d8c;
-    
-}
+
 #add_salon .form-active{
     background: #855d8c;
 }
-.form-group:hover label{
+#add_salon .form-active label{
     color:#fff;
     
 }
-.form-group:hover span{
+#add_salon .form-active span{
     color:#fff;      
 }
 #add_salon .mast_be{
@@ -84,8 +95,9 @@ border-bottom: 2px solid rgba(3, 134, 253, 0.37);
 #add_salon .example{
 display: block;
 }
-#add_salon #page_heading{
-width:30%;
+#add_salon #page_heading,
+input#page_url{
+width:50%;
 }
 #add_salon #text_muted{
 width:100%;
@@ -104,6 +116,7 @@ width:100%;
 width:100%;
 }
 #add_salon #add_image{
+    display:block;
     background: #5b9dd9;
     font-size: 18px;
     color: #fff;
@@ -142,4 +155,52 @@ outline: none;
 }
 input[type=number] {
     height: 45px;
+}
+
+#add_salon #update {
+    background: #e57c92;
+    font-size: 24px;
+    color: #fff;
+    border-radius: 2px;
+    text-shadow: none;
+    text-transform: uppercase;
+    padding: 7px 20px;
+    text-align: center;
+    border: 0;
+    box-shadow: 0 1px 1px rgba(000,000,000,0.25);
+    outline: none;
+    width: 100%;
+    max-width: 270px;
+    outline: none;
+}
+
+.search {
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.search .dashicons,
+.dashicons-edit{
+    margin: 0 0 0 20px;
+    font-size: 32px;
+}
+.main_actions{
+ padding:15px;   
+}
+#add_salon{
+    display:none;
+}
+.top_section {
+   
+}
+.wrap h1{
+        color: #855D8C;
+    font-weight: bold;
+    font-size: 30px;
+}
+.search {
+    background-color: rgba(133, 93, 140, 0.6);
+}
+.edit_page_url{
+    display:none;
 }

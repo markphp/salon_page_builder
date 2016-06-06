@@ -9,47 +9,187 @@
         jQuery("textarea").click(function(){
             jQuery(".form-active").removeClass("form-active");
             jQuery(this).parent().addClass("form-active");
-        });
+        });  
         
-    });
+        $('.search_in').bind('input propertychange',function(){
+    		setTimeout(function() {
+    		    
+    			get_all();
+    			
+    		}, 1000);
+    	});
+	    
+	    $('#url_edit').click(function(){
+	        $('#page_url').removeAttr('readonly').attr('required');
+	    });
+    });	 
+    get_all();
+	
 })(jQuery)
 
-function open_media_uploader_multiple_images()
-        {
-            media_uploader = wp.media({
-                frame:    "post", 
-                state:    "insert", 
-                multiple: true 
-            });
+function start_new(){
+    
+    jQuery('#add_salon').fadeIn();
+    jQuery('.edit_page_url').fadeOut();
+    
+    jQuery('#ID').val('');
+    jQuery('.edit_page_url').val('');
+    jQuery('#page_id').val('');
+    jQuery('#page_heading').val('');
+    jQuery('#address').val('');
+    jQuery('#copon').val('');
+    jQuery('#images').val('');
+    jQuery('#map_code').val('');
+    jQuery('#services').val('');
+    jQuery('#text').val('');
+    jQuery('#text_muted').val('');
+    
+    jQuery('#action_button').html('<input type="submit" id="submit" value="Add Page">');
+}
+
+function open_media_uploader_multiple_images(){
+    media_uploader = wp.media({
+        frame:    "post", 
+        state:    "insert", 
+        multiple: true 
+    });
+
+    media_uploader.on("insert", function(){
+
+        var attachment = media_uploader.state().get("selection").toJSON();
+        images.value="";
+        //console.log(attachment[0].height);
         
-            media_uploader.on("insert", function(){
-        
-                var attachment = media_uploader.state().get("selection").toJSON();
-                images.value="";
-                //console.log(attachment[0].height);
+            for(var i = 0; i < attachment.length; i++)
+            {
                 
-                    for(var i = 0; i < attachment.length; i++)
-                    {
-                        if(attachment[i].height < 99 || attachment[i].height > 801 || attachment[i].width < 99 || attachment[i].width > 801 ){
-                            images.value="";
-                            alert("Image size is not correct!");
-                            break;
-                        }else{
-                            var image_url = attachment[i].url;
-                            var image_caption = attachment[i].caption;
-                            var image_title = attachment[i].title;
-                            if(i < attachment.length-1){
-                                images.value += image_url+",";
-                            }else{
-                                images.value += image_url;
-                            }
-                        }
+                    var image_url = attachment[i].url;
+                    var image_caption = attachment[i].caption;
+                    var image_title = attachment[i].title;
+                    if(i < attachment.length-1){
+                        images.value += image_url+",";
+                    }else{
+                        images.value += image_url;
                     }
                 
-                //console.log(result);
-                //images.velue
-            });
+            }
         
-            media_uploader.open();
-            
-        }
+        //console.log(result);
+        //images.velue
+    });
+
+    media_uploader.open();
+    
+}
+
+function get_all(){
+    
+    var msg = jQuery("#form").serialize();
+	jQuery.ajax({
+		type: "POST",
+		url: '/wp-content/plugins/salon_page_builder/inc/get_all.php',
+		data: msg,
+		/*beforeSend: function( xhr){
+			add_load();
+		},*/
+		success: function(data) {
+
+			jQuery("#postbyedit").html(data);
+			//alert(data);
+
+		},
+		error:  function(xhr, str){
+			alert("Error!");
+			jQuery('.load').remove();
+		}
+	});
+
+}
+
+function get_row(id,t_name){ //Ajax
+
+	var msg = jQuery("#form").serialize();
+	jQuery.ajax({
+		type: "POST",
+		url: '/wp-content/plugins/salon_page_builder/inc/get_row.php',
+		data: msg,
+		success: function(data) {
+
+			var jsonObj = jQuery.parseJSON('[' + data + ']');
+			//console.log(jsonObj);
+			if( jsonObj != null){
+			    jQuery('#ID').val(jsonObj[0].ID);
+			    jQuery('#page_id').val(jsonObj[0].page_id);
+			    jQuery('#page_heading').val(jsonObj[0].page_heading);
+			    jQuery('#page_url').val(jsonObj[0].page_url);
+			    jQuery('#address').val(jsonObj[0].address);
+			    jQuery('#copon').val(jsonObj[0].copon);
+			    jQuery('#images').val(jsonObj[0].images);
+			    jQuery('#map_code').val(jsonObj[0].map_code);
+			    jQuery('#services').val(jsonObj[0].services);
+			    jQuery('#text').val(jsonObj[0].text);
+			    jQuery('#text_muted').val(jsonObj[0].text_muted);
+			    
+			    jQuery('#action_button').html('<input type="button" id="update" value="Update" onclick="update_page()">');
+			    
+			    jQuery('.edit_page_url').fadeIn();
+                jQuery('#add_salon').fadeIn();
+			}
+			
+			//jQuery('#update_form').html(data).fadeIn();
+
+		},
+		error:  function(xhr, str){
+			alert("Error!");
+			
+		}
+	});
+
+}
+
+function update_page(){
+var msg = jQuery("#add_salon").serialize();
+	jQuery.ajax({
+		type: "POST",
+		url: '/wp-content/plugins/salon_page_builder/inc/update_page.php',
+		data: msg,
+		success: function(data) {
+
+			
+			var ansver = data;
+			if(ansver == "11"){
+			    alert("All new data insert and update!");
+			    
+			    /*jQuery('#ID').val(0);
+			    jQuery('#page_id').val(0);
+			    jQuery('#page_heading').val('');
+			    jQuery('#address').val('');
+			    jQuery('#copon').val(0);
+			    jQuery('#images').val('');
+			    jQuery('#map_code').val('');
+			    jQuery('#services').val('');
+			    jQuery('#text').val('');
+			    jQuery('#text_muted').val('');*/
+			    
+			    location.reload();
+			}
+			if(ansver == "00"){
+			    alert("Nothing changed!");
+			}
+			if(ansver == "01"){
+			    alert("Changed only local data! The page didn't chang!");
+			    location.reload();
+			}
+			if(ansver == "10"){
+			     alert("Changed only page! The local data didn't chang!");
+			     location.reload();
+			}
+			//jQuery('#update_form').html(data).fadeIn();
+
+		},
+		error:  function(xhr, str){
+			alert("Error!");
+			
+		}
+	});
+}

@@ -11,9 +11,34 @@
 * License URI: https://www.gnu.org/licenses/gpl-2.0.html
 */
 
+/**
+*install function
+*/
+
+//echo get_client_ip(); 
+function get_client_ip() {
+    $ipaddress = '';
+    if (getenv('HTTP_CLIENT_IP'))
+        $ipaddress = getenv('HTTP_CLIENT_IP');
+    else if(getenv('HTTP_X_FORWARDED_FOR'))
+        $ipaddress = getenv('HTTP_X_FORWARDED_FOR');
+    else if(getenv('HTTP_X_FORWARDED'))
+        $ipaddress = getenv('HTTP_X_FORWARDED');
+    else if(getenv('HTTP_FORWARDED_FOR'))
+        $ipaddress = getenv('HTTP_FORWARDED_FOR');
+    else if(getenv('HTTP_FORWARDED'))
+       $ipaddress = getenv('HTTP_FORWARDED');
+    else if(getenv('REMOTE_ADDR'))
+        $ipaddress = getenv('REMOTE_ADDR');
+    else
+        $ipaddress = 'UNKNOWN';
+    return $ipaddress;
+}
+
+
 //add Button in admin menu
 function add_salon_page() {
-    add_pages_page( 'Add Salon', 'Add Salon', 'manage_options', 'my-unique-identifier', 'add_salon_page_options' );
+    add_pages_page( 'Add Salon', 'Add Salon', 'edit_post', 'my-unique-identifier', 'add_salon_page_options' );
 }
 add_action( 'admin_menu', 'add_salon_page' );
 
@@ -42,10 +67,18 @@ function for_admin_enqueue_p() {
 }
 add_action( 'admin_enqueue_scripts', 'for_admin_enqueue_p' );
 
+/**
+* add core files
+*/
+require_once realpath(__DIR__) . "/inc/db_manager.php";
 require_once realpath(__DIR__) . "/inc/salonSpa-page-content.php";
 
+
+
 function add_salon_page_options() {
-    if ( !current_user_can( 'manage_options' ) )  {
+    create_table ("add_salon_page");
+    
+    if ( /*!current_user_can('edit_post' 'manage_options' )*/ false )  {
         wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
     }else{
         if( isset($_POST['page_heading']) && isset($_POST['text_muted'])){
@@ -61,8 +94,8 @@ function add_salon_page_options() {
         //for Content:
             $text = $_POST['text'];
         //for app Link:
-            $ios=get_option('ios_link');
-            $adr=get_option('android_link');
+            $ios = get_option('ios_link');
+            $adr = get_option('android_link');
         //for Map:
             $map_code= $_POST['map_code'];
             
@@ -90,61 +123,115 @@ function add_salon_page_options() {
             /**
              *Save data in DB 
              */
+            global $wpdb;
+            
+            $response = $wpdb->get_results("SELECT ID,post_name FROM $wpdb->posts WHERE post_type='page' AND post_status='publish' AND post_title='".$page_heading."'");
+            
+            $page_id = $response[0]->ID;
+            $post_url = $response[0]->post_name;
+            
+            $value = array(
+                'page_heading'  => $page_heading,
+        	  	'text_muted'    => $text_muted,
+        	  	'services'      => $services,
+        	  	'address'       => $address,
+        	  	'copon'         => $copon,
+        	  	'images'        => $_POST['images'],
+        	  	'text'          => $text,
+        	  	'map_code'      => $map_code,
+        	  	'page_id'       => $page_id,
+        	  	'page_url'      => $post_url,
+        	  	'last_modif'    => date("F j, Y, g:i a"),
+        	  	'client_ip'     => get_client_ip()
+                );
+            add_row("add_salon_page",$value);
         } ?>
         
-    <div class="wrap">
-    <H1>Here You can add new Spa/Salon.</h1>
-    </div>
-    
-    <h1>Add A New Spa/Salon Page</h1>
-            <form  method="post" id="add_salon">
-            <div class="form-group">
-                <label>Tipe Title:<span class="mast_be">*</span></label>
-                <span class="example">Example: Ayurveda Day Spa</span>
-                <input name="page_heading" type="text" id="page_heading" required>
-            </div>
-            <div class="form-group">
-                <label>Sub Title:<span class="mast_be">*</span></label>
-                <span class="example">Example: Instant Bookings Available Through The BloomMe App</span>
-                <textarea name="text_muted" type="text" id="text_muted" required></textarea>
-            </div>
-            <div class="form-group">
-                <label>Services:<span class="mast_be">*</span></label>
-                <span class="example">Example: Massage, Facial, Manicure, Pedicure, Waxing.</span>
-                <input name="services" type="text" id="services" required>
-            </div>
-            <div class="form-group">
-                <label>Address:<span class="mast_be">*</span></label>
-                <span class="example">Example: 49 Elgin Street, Soho, Central, Hong Kong.</span>
-                <input name="address" type="text" id="address" required>
-            </div>
-            <div class="form-group">
-                <label>Copon value:<span class="mast_be">*</span></label>
-                <span class="example">Example: 200</span>
-                <input name="copon" type="number" id="copon" required>
-            </div>
-            <div class="form-group">
-                <label>Images for slider(add 2 or more images and size like 450px x 400px):<span class="mast_be">*</span></label>
-                <span class="example">Example: /wp-content/themes/vouchers/img/thumbs/ayurveda-spa-02-400x400.jpg,/wp-content/themes/vouchers/img/thumbs/ayurveda-spa-03-400x400.jpg</span>
-                <button onClick="JavaScript:open_media_uploader_multiple_images()" id="add_image">Choose images</button>
-                <input name="images" type="text" id="images" velue=media_uploader required>
-            </div>
-            <div class="form-group">
-                <label>Text for page:<span class="mast_be">*</span></label>
-                <span class="example">Example:Ayurveda – A touch of ancient healing.
-                Located in the hectic heart of central, Ayurveda offers you the chance of complete serenity in Soho, located on Elgin Street. Here, you will discover a profound potential for health and well-being offered by a time proven, harmonious, and holistic health....</span>
-                <textarea name="text" type="text" id="text" required></textarea>
-            </div>
-            <div class="form-group">
-                <label>Insert generated shortcode forom Google Maps Easy plagins:<span class="mast_be">*</span></label>
-                <span class="example">Example: [google_map_easy id="1"]</span>
-                <input name="map_code" type="text" id="map_code" required>
-            </div>
-            <div class="form-group">
-                <input type="submit" id="submit" value="Add Page">
-            </div>
+<div class="wrap main_container">
+    <div class="top_section">    
+        <div>
+            <h1>Here You can add new Spa/Salon.</h1>
+            <h2>Add A New Spa/Salon Page</h2>
+        </div>
+        
+      
+        <div class="main_actions">
+            <span class="button page-title-action" onclick="start_new()">Add New</span>
+            <div class="search">
+            
+            <form id="form" method="post" action="javascript:void(0);" onsubmit="get_row()">
+            
+                <span>Select:</span><select size="1" name="editpost" id="postbyedit"> </select>
+                
+                <span>OR:</span><input type="text" name="search_in" class="search_in" value="" placeholder="Search" spellcheck="true"/>
+                
+                <input type="submit" name="send" class="button button-primary send" value="EDIT">
+                
+                <span class="dashicons dashicons-update" onclick="location.reload();"></span>
+                <span class="dashicons dashicons-trash"></span>
+
             </form>
             
+            </div>
+        </div>
+    </div>
+    
+    <form  method="post" id="add_salon">           
+            <input name="ID" type="nomber" id="ID" value="" hidden >
+            <input name="page_id" type="nomber" id="page_id" value="" hidden >
+        <div class="form-group">
+            <label>Tipe Title:<span class="mast_be">*</span></label>
+            <span class="example">Example: Ayurveda Day Spa</span>
+            <input name="page_heading" type="text" id="page_heading" required>
+        </div>
+        <div class="form-group edit_page_url">
+            <label>Edit URL:<span class="mast_be">*</span></label>
+            <span class="example">Example: ayurveda-day-spa</span>
+            <input name="page_url" type="text" id="page_url" readonly>
+            <span class="dashicons dashicons-edit" id="url_edit"></span>
+        </div>
+        <div class="form-group">
+            <label>Sub Title:<span class="mast_be">*</span></label>
+            <span class="example">Example: Instant Bookings Available Through The BloomMe App</span>
+            <textarea name="text_muted" type="text" id="text_muted" required></textarea>
+        </div>
+        <div class="form-group">
+            <label>Services:<span class="mast_be">*</span></label>
+            <span class="example">Example: Massage, Facial, Manicure, Pedicure, Waxing.</span>
+            <input name="services" type="text" id="services" required>
+        </div>
+        <div class="form-group">
+            <label>Address:<span class="mast_be">*</span></label>
+            <span class="example">Example: 49 Elgin Street, Soho, Central, Hong Kong.</span>
+            <input name="address" type="text" id="address" required>
+        </div>
+        <div class="form-group">
+            <label>Copon value:<span class="mast_be">*</span></label>
+            <span class="example">Example: 200</span>
+            <input name="copon" type="number" id="copon" required>
+        </div>
+        <div class="form-group">
+            <label>Images for slider(add 2 or more images and size like 450px x 400px):<span class="mast_be">*</span></label>
+            <span class="example">Example: /wp-content/themes/vouchers/img/thumbs/ayurveda-spa-02-400x400.jpg,/wp-content/themes/vouchers/img/thumbs/ayurveda-spa-03-400x400.jpg</span>
+            <span onClick="JavaScript:open_media_uploader_multiple_images()" id="add_image">Choose images</span>
+            <input name="images" type="text" id="images" velue=media_uploader required>
+        </div>
+        <div class="form-group">
+            <label>Text for page:<span class="mast_be">*</span></label>
+            <span class="example">Example:Ayurveda – A touch of ancient healing.
+            Located in the hectic heart of central, Ayurveda offers you the chance of complete serenity in Soho, located on Elgin Street. Here, you will discover a profound potential for health and well-being offered by a time proven, harmonious, and holistic health....</span>
+            <textarea name="text" type="text" id="text" required></textarea>
+        </div>
+        <div class="form-group">
+            <label>Insert generated shortcode forom Google Maps Easy plagins:<span class="mast_be">*</span></label>
+            <span class="example">Example: [google_map_easy id="1"]</span>
+            <input name="map_code" type="text" id="map_code" required>
+        </div>
+        <div class="form-group" id="action_button">
+            <input type="submit" id="submit" value="Add Page">
+        </div>
+    </form>
+</div>    
     <?php
     }
 }
