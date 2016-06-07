@@ -22,6 +22,19 @@
 	    $('#url_edit').click(function(){
 	        $('#page_url').removeAttr('readonly').attr('required');
 	    });
+	    
+	    $('.dashicons-trash').click(function(){
+	        var page_id = $('#page_id').val();
+	        var id = $('#ID').val();
+	        //console.log(page_id);
+	        //console.log(id);
+	        alert('You want del page!');
+	        //del_page(page_id,id);
+	    });
+	    
+	    $('.dashicons-external').click(function(){
+	        window.location='/'+$('#page_url').val();
+	    });
     });	 
     get_all();
 	
@@ -31,6 +44,8 @@ function start_new(){
     
     jQuery('#add_salon').fadeIn();
     jQuery('.edit_page_url').fadeOut();
+    
+    
     
     jQuery('#ID').val('');
     jQuery('.edit_page_url').val('');
@@ -134,9 +149,10 @@ function get_row(id,t_name){ //Ajax
 			    
 			    jQuery('.edit_page_url').fadeIn();
                 jQuery('#add_salon').fadeIn();
+                jQuery('.dashicons-external').fadeIn();
+                jQuery('.dashicons-trash').fadeIn();
 			}
 			
-			//jQuery('#update_form').html(data).fadeIn();
 
 		},
 		error:  function(xhr, str){
@@ -184,7 +200,52 @@ var msg = jQuery("#add_salon").serialize();
 			     alert("Changed only page! The local data didn't chang!");
 			     location.reload();
 			}
-			//jQuery('#update_form').html(data).fadeIn();
+
+		},
+		error:  function(xhr, str){
+			alert("Error!");
+			
+		}
+	});
+}
+
+function all_update(){
+    var msg = {'key':'true'};
+    jQuery.ajax({
+		type: "POST",
+		url: '/wp-content/plugins/salon_page_builder/inc/all_update.php',
+		data: msg,
+		success: function(data) {
+			var ansver = data;
+			//jQuery('.debug').html(data);
+			if(ansver == "1"){
+			    alert("All new data insert and update!");
+			    
+			    location.reload();
+			}
+
+		},
+		error:  function(xhr, str){
+			alert("Error!");
+			
+		}
+	});
+}
+
+function del_page(page_id,id){
+    var msg = {'page_id':page_id,'ID':id};
+    jQuery.ajax({
+		type: "POST",
+		url: '/wp-content/plugins/salon_page_builder/inc/del_page.php',
+		data: msg,
+		success: function(data) {
+			var ansver = data;
+			//jQuery('.debug').html(data);
+			if(ansver == "da"){
+			    alert("The page was removed!");		    
+			    location.reload();
+			}
+			
 
 		},
 		error:  function(xhr, str){

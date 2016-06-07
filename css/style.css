@@ -31,7 +31,7 @@ padding:5px 5px 20px 25px;
     color:#fff;
     
 }
-#add_salon .form-active span{
+#add_salon .form-active {
     color:#fff;      
 }
 #add_salon .mast_be{
@@ -203,4 +203,24 @@ input[type=number] {
 }
 .edit_page_url{
     display:none;
+}
+.search  .dashicons-update{
+    display: block;
+    float: right;
+    margin-right: 10px;
+}
+.dashicons:hover{
+    cursor: pointer;
+    color:#fff;
+}
+.dashicons-trash:hover{
+    color:red;
+}
+.dashicons-edit:hover{
+    color:#ffa200;
+}
+.wp-core-ui .button-secondary:focus, .wp-core-ui .button-secondary:hover, .wp-core-ui .button.focus, .wp-core-ui .button.hover, .wp-core-ui .button:focus, .wp-core-ui .button:hover {
+    background: #00ace7;
+    border-color: #999;
+    color: #23282d;
 }

@@ -13,12 +13,9 @@ function add_salon_page_cont($POST) {
             $address = $POST['address'];
             $copon = $POST['copon'];
         //for Slider:
-            $images = split(',',$_POST['images']);
+            $images = split(',',$POST['images']);
         //for Content:
             $text = $POST['text'];
-        //for app Link:
-            $ios=get_option('ios_link');
-            $adr=get_option('android_link');
         //for Map:
             $map_code= $POST['map_code'];
             

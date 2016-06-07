@@ -38,7 +38,7 @@ function get_client_ip() {
 
 //add Button in admin menu
 function add_salon_page() {
-    add_pages_page( 'Add Salon', 'Add Salon', 'edit_post', 'my-unique-identifier', 'add_salon_page_options' );
+    add_pages_page( 'Add Salon', 'Add Salon', 'manage_options', 'add-salon', 'add_salon_page_options' );
 }
 add_action( 'admin_menu', 'add_salon_page' );
 
@@ -166,9 +166,11 @@ function add_salon_page_options() {
                 <span>OR:</span><input type="text" name="search_in" class="search_in" value="" placeholder="Search" spellcheck="true"/>
                 
                 <input type="submit" name="send" class="button button-primary send" value="EDIT">
+                <span class="dashicons dashicons-undo" onclick="location.reload();" title="Reset"></span>
+                <span class="dashicons dashicons-external" style="display:none" title="Go on page"></span>
+                <span class="dashicons dashicons-trash" style="display:none" title="Delet the page!"></span>
+                <span class="dashicons dashicons-update" title="All update" onclick="all_update()"></span>
                 
-                <span class="dashicons dashicons-update" onclick="location.reload();"></span>
-                <span class="dashicons dashicons-trash"></span>
 
             </form>
             
@@ -188,7 +190,7 @@ function add_salon_page_options() {
             <label>Edit URL:<span class="mast_be">*</span></label>
             <span class="example">Example: ayurveda-day-spa</span>
             <input name="page_url" type="text" id="page_url" readonly>
-            <span class="dashicons dashicons-edit" id="url_edit"></span>
+            <span class="dashicons dashicons-edit" id="url_edit" title="Edit url"></span>
         </div>
         <div class="form-group">
             <label>Sub Title:<span class="mast_be">*</span></label>
@@ -231,6 +233,7 @@ function add_salon_page_options() {
             <input type="submit" id="submit" value="Add Page">
         </div>
     </form>
+    <div class="debug"></div>
 </div>    
     <?php
     }
